@@ -1,15 +1,11 @@
-import os
+import os, requests, urllib
 from twilio.rest import Client
 
 class WhatsappNotifier:
+    def __init__(self):
+        self.url = "https://api.callmebot.com/whatsapp.php?phone={ph_number}&apikey={api_key}".format(ph_number=os.environ["PH_NUMBER"], api_key=os.environ["CALLMEBOT_API_KEY"])
 
-    def notify(self, msg):
-        account_sid = os.environ['TWILIO_ACCOUNT_SID']
-        auth_token = os.environ['TWILIO_AUTH_TOKEN']
-        client = Client(account_sid, auth_token)
-        message = client.messages.create(
-            body=msg,
-            from_='whatsapp:+14155238886',
-            to='whatsapp:{number}'.format(number=os.environ["PH_NUMBER"])
-        )
-        return message
+    def notify(self, message):
+        url = self.url + "&text={text}".format(text=urllib.parse.quote_plus(message))
+        resp = requests.get(url)
+        return resp.content

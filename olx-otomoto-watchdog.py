@@ -15,7 +15,6 @@ class OlxOtomotoWatchdog:
         current_offers = OffersParser().get_current_offers()
         self.storage.update_offers(current_offers)
         message = self.format_otomoto_message(current_offers['otomoto'][0])
-        print("notified", WhatsappNotifier().notify(message))
         return message
         
     def format_otomoto_message(self, otomoto):
